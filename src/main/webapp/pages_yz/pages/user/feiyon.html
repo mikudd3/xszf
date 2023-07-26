@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- 页面meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>费用</title>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+    <head>
+    </head>
+</head>
+<body>
+<div id="app">
+    <div class="content-header">
+        <h1>费用管理</h1>
+    </div>
+    <div class="app-container">
+        <div class="box">
+            <!--模糊查询条件            -->
+            <div class="filter-container">
+                <el-input placeholder="地址" v-model="address" style="width: 200px;"
+                          class="filter-item"></el-input>
+                <el-input placeholder="季度" v-model="season" style="width: 200px;"
+                          class="filter-item"></el-input>
+                <el-button @click="getAll()" class="dalfBut">查询</el-button>
+            </div>
+
+            <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
+                <el-table-column type="index" align="center" label="序号"></el-table-column>
+                <el-table-column prop="address" label="地址" align="center"></el-table-column>
+                <el-table-column prop="water_fee" label="水费" align="center"></el-table-column>
+                <el-table-column prop="electricity_fee" label="电费" align="center"></el-table-column>
+                <el-table-column prop="rent_fee" label="租金" align="center"></el-table-column>
+                <el-table-column prop="service_fee" label="维修费用" align="center"></el-table-column>
+                <el-table-column prop="all_fee" label="总费用" align="center"></el-table-column>
+                <el-table-column prop="season" label="季度" align="center"></el-table-column>
+                <el-table-column prop="zt" label="状态" align="center">
+                    <template slot-scope="scope">
+                        <span style="color: red" v-if="scope.row.zt == 0">未缴费</span>
+                        <span v-else-if="scope.row.zt == 1">已缴费</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" align="center">
+                    <template slot-scope="scope">
+                        <el-button type="primary" size="mini" @click="handleCreate(scope.row)">缴费</el-button>
+                        <el-button type="tongji" size="mini" @click="tongji(scope.row)">费用统计</el-button>
+                    </template>
+                </el-table-column>
+
+            </el-table>
+
+            <!-- 缴费标签弹层 -->
+            <div class="add-form">
+                <el-dialog title="缴费" v-cloak :visible.sync="dialogFormVisible">
+                    <img class="image" src="../../../image/收款码.jpg" alt="二维码" style="width: 600px;height: 600px"/>
+                </el-dialog>
+            </div>
+
+            <!-- 费用统计标签弹层 -->
+            <div class="add-form">
+                <el-dialog title="费用统计" :visible.sync="dialogFormVisible1">
+                    <div id="chart" style="width: 600px; height: 400px;"></div>
+                </el-dialog>
+            </div>
+
+        </div>
+    </div>
+    <!--分页工具条-->
+    <div class="block">
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[5, 10, 15, 20]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="totalCount">
+        </el-pagination>
+    </div>
+</div>
+
+</body>
+<!-- 引入组件库 -->
+
+<script src="../../../plugins/js/vue.js"></script>
+<script src="../../../plugins/js/echarts.min.js"></script>
+<link rel="stylesheet" href="../../../plugins/element-ui/index.css">
+<script src="../../../plugins/element-ui/index.js"></script>
+<script src="../../../plugins/js/axios-0.18.0.js"></script>
+<script src="../../js/feiyon.js"></script>
+
+
+
+</html>

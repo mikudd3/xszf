@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.win.xszf.mapper.ServiceMapper">
+
+<!--    <insert id="addService" parameterType="com.win.xszf.pojo.entity.Service">-->
+<!--        insert into service(zfid,type,status,money,date,set_date)-->
+<!--        values (#{zfid},#{type},#{status},#{money},#{date},#{set_date})-->
+<!--    </insert>-->
+
+    <delete id="deleteServiceBy_id">
+        delete from service where id =#{id}
+    </delete>
+
+    <update id="updataService" parameterType="com.win.xszf.pojo.vo.WeiXiuVo">
+        update service
+        <set>
+            <if test="status != null and status !=''">
+                ,status = #{status}
+            </if>
+            <if test="money != null">
+                ,money = #{money}
+            </if>
+            <if test="date != null and date !=''">
+                ,`date` = #{date}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectService" resultType="com.win.xszf.pojo.entity.Service" parameterType="com.win.xszf.pojo.entity.Service">
+        select * from service
+        <where>
+            <if test="zfid != null">
+                zfid = #{zfid}
+            </if>
+            <if test="status != null and status !=''">
+                ,status = like concat('%',#{status},'%')
+            </if>
+            <if test="money != null">
+                ,money = #{money}
+            </if>
+            <if test="set_date != null and set_date !=''">
+                ,set_date = #{set_date}
+            </if>
+        </where>
+    </select>
+
+    <select id="getdata" parameterType="com.win.xszf.pojo.dto.ServicegetdataDto" resultType="com.win.xszf.pojo.dto.ServicegetdataDto">
+        select rent.id,house.address from rent,house
+        where rent.house_id = house.id
+        and rent.user_id = #{id}
+    </select>
+
+
+    <select id="getdata1" parameterType="com.win.xszf.pojo.dto.ServicegetdataDto" resultType="com.win.xszf.pojo.dto.ServicegetdataDto">
+        select rent.house_id,house.address from rent,house
+        where rent.house_id = house.id
+          and rent.user_id = #{id}
+    </select>
+
+    <!--租客分页查询-->
+    <select id="pageQuery" resultType="com.win.xszf.pojo.vo.WeiXiuVo" parameterType="com.win.xszf.pojo.dto.ServicePageQueryDto">
+        select service.id,house.address,service.type,service.money,service.date,service.set_date,service.status
+        from service,rent,house
+        where service.zfid = rent.id
+        and rent.house_id = house.id
+        and rent.user_id = #{id}
+        <if test="status != null and status != ''">
+            and service.status like concat('%',#{status},'%')
+        </if>
+        <if test="address != null and address != ''">
+            and house.address like concat('%',#{address},'%')
+        </if>
+        order by service.set_date desc
+    </select>
+
+    <!--房东分页查询-->
+    <select id="fdpageQuery" resultType="com.win.xszf.pojo.vo.WeiXiuVo" parameterType="com.win.xszf.pojo.dto.ServicePageQueryDto">
+        select service.id,house.address,service.type,user.realname,user.phone,service.set_date,service.status
+        from service,house,user,rent
+        where service.zfid = rent.id
+        and rent.house_id = house.id
+        and house.user_id=user.id
+        and user.id = #{id}
+        order by service.set_date desc
+    </select>
+</mapper>

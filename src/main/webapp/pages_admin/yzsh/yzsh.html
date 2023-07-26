@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>用户升级为业主审核</title>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,employee-scalable=no" name="viewport">
+</head>
+<body class="hold-transition">
+<div id="app">
+    <div class="content-header">
+        <h1>用户升级为业主审核</h1>
+    </div>
+    <div class="app-container">
+        <div class="box">
+            <!--模糊查询条件-->
+            <div class="filter-container">
+                <el-input placeholder="用户名" v-model="username" style="width: 200px;"
+                          class="filter-item"></el-input>
+                <el-button type="primary" @click="getAll()" class="dalfBut">查询</el-button>
+            </div>
+
+            <!-- 表格-->
+            <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
+                <el-table-column type="index" align="center" label="序号"></el-table-column>
+                <el-table-column prop="username" label="账号" align="center"></el-table-column>
+                <el-table-column prop="realname" label="申请人" align="center"></el-table-column>
+                <el-table-column prop="sex" label="性别" align="center"></el-table-column>
+                <el-table-column prop="sfz" label="身份证" align="center"></el-table-column>
+                <el-table-column prop="phone" label="电话" align="center"></el-table-column>
+                <el-table-column prop="email" label="邮箱" align="center"></el-table-column>
+                <el-table-column label="操作" align="center">
+                    <template slot-scope="scope">
+                        <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">审查</el-button>
+                        <el-button type="primary" size="mini" @click="handlePass(scope.row)">通过</el-button>
+                        <el-button type="danger" size="mini" @click="handleDelete(scope.row)">拒绝</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+
+            <!-- 审核页面弹层 -->
+            <div class="add-form">
+                <el-dialog title="申请信息" :visible.sync="dialogFormVisible4Edit">
+                    <el-form ref="dataEditForm" :model="formData" :rules="rules" label-position="right"
+                             label-width="100px">
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="真实姓名:" prop="realname">
+                                    <span>{{formData.realname}}</span>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="身份证:" prop="sfz">
+                                    <span>{{formData.sfz}}</span>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="电话:" prop="phone">
+                                    <span>{{formData.phone}}</span>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
+                                <el-form-item label="证明材料" prop="cl">
+                                    <span><img :src="imageUrl" style="width: 200px ;height: 300px"></span>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogFormVisible4Edit = false">取消</el-button>
+                        <el-button type="primary" @click="handleEdit()">确定</el-button>
+                    </div>
+                </el-dialog>
+            </div>
+        </div>
+    </div>
+    <!--分页工具条-->
+    <div class="block">
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[5, 10, 15, 20]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="totalCount">
+        </el-pagination>
+    </div>
+</div>
+</body>
+<!-- 引入组件库 -->
+<script src="../../plugins/js/vue.js"></script>
+<link rel="stylesheet" href="../../plugins/element-ui/index.css">
+<script src="../../plugins/element-ui/index.js"></script>
+<script src="../../plugins/js/axios-0.18.0.js"></script>
+<script src="../js/yzsh.js"></script>
+</html>

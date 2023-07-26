@@ -1,0 +1,555 @@
+@import url(base.css);
+
+body {
+    background-color: #F9F9F9;
+}
+
+#header {
+    background-color: whitesmoke;
+    height: 120px;
+}
+
+
+#header > div {
+    width: 1200px;
+    padding: 10px 0;
+    margin: auto;
+}
+
+#header > div > img {
+    width: 330px;
+}
+
+#header #tx {
+    width: 80px;
+    height: 80px;
+    margin-top: 10px;
+    border-radius: 50%;
+    border: 1px solid black;
+    float: right;
+}
+
+#header #ipu {
+    width: 250px;
+    height: 40px;
+    margin: 0 10px 0 40px;
+    border-radius: 10px;
+    text-indent: 10px;
+}
+
+#header a {
+    margin: 15px;
+    font-size: 18px;
+    color: black;
+}
+
+.active,
+a:hover {
+    margin-top: 5px;
+    border-bottom: 2px solid #00a4ff;
+}
+
+#header a:hover {
+    color: skyblue;
+}
+
+
+#main {
+    width: 1200px;
+    margin: auto;
+}
+
+#m1 > span > a:hover {
+    color: skyblue;
+}
+
+#m2 {
+    height: 600px;
+    background-color: rgb(245, 245, 245);
+}
+
+.type .title {
+    padding: 20px 0;
+}
+
+.title span {
+    font-size: 30px;
+}
+
+.title a {
+    float: right;
+    font-size: 15px;
+    color: black;
+}
+
+.title a:hover {
+    color: red;
+}
+
+#footer {
+    padding: 10px;
+    background-color: black;
+    color: gray;
+    text-align: center;
+    font-size: 15px;
+}
+
+
+.slider {
+    width: 1200px;
+    height: 600px;
+    overflow: hidden;
+}
+
+.slider-wrapper {
+    width: 100%;
+    height: 520px;
+}
+
+.slider-wrapper img {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.slider-footer {
+    height: 80px;
+    background-color: rgb(100, 67, 68);
+    padding: 12px 12px 0 12px;
+    position: relative;
+}
+
+.slider-footer .toggle {
+    position: absolute;
+    right: 0;
+    top: 12px;
+    display: flex;
+}
+
+.slider-footer .toggle button {
+    margin-right: 12px;
+    width: 28px;
+    height: 28px;
+    appearance: none;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.slider-footer .toggle button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.slider-footer p {
+    margin: 0;
+    color: #fff;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.slider-indicator {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    align-items: center;
+}
+
+.slider-indicator li {
+    width: 8px;
+    height: 8px;
+    margin: 4px;
+    border-radius: 50%;
+    background: #fff;
+    opacity: 0.4;
+    cursor: pointer;
+}
+
+.slider-indicator li.active {
+    width: 12px;
+    height: 12px;
+    opacity: 1;
+}
+
+#choose {
+    margin-top: 30px;
+    padding: 10px;
+    border: 1px solid #e3e3e3
+}
+
+.elems-l > a {
+    margin-right: 10px;
+}
+
+.form {
+    display: inline;
+}
+
+.from-price, .to-price {
+    border: 1px solid #e3e3e3; /* 添加边框样式 */
+}
+
+.items {
+    display: flex;
+    height: 40px;
+    align-items: center;
+    border-bottom: 1px solid #e3e3e3;
+}
+
+.item-title {
+    white-space: nowrap;
+    margin-left: 10px;
+}
+
+.condul {
+    display: flex;
+    list-style: none;
+    height: 40px;
+    align-items: center;
+}
+
+.condul li {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.condlist_tip {
+    margin-left: 10px;
+}
+
+.condibox {
+    position: relative;
+    margin-left: 10px;
+}
+
+.select_item {
+    display: inline-block;
+    padding: 2px;
+    padding-right: 10px;
+    background-color: #F9F9F9;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.all {
+    color: red;
+}
+
+.txt {
+    font-weight: bold;
+    padding-left: 5px;
+}
+
+.icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: url("../image/xialajiantou.png") no-repeat center;
+    background-size: contain;
+}
+
+.cond_list {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 999;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+
+.condibox:hover .cond_list {
+    display: block;
+}
+
+.cond_list li {
+    margin-bottom: 5px;
+}
+
+.cond_list li:last-child {
+    margin-bottom: 0;
+}
+
+.filter_check {
+    margin-left: 10px;
+}
+
+.content .list-content {
+    zoom: 1;
+    float: left;
+    position: relative;
+    width: 900px;
+    z-index: 0
+}
+
+.content .list-content .zu-tab {
+    border-bottom: 2px solid #62ab00;
+    color: #fff;
+    font-size: 0;
+    margin-top: 20px;
+    height: 50px;
+    display: flex;
+    align-items: flex-end; /* <a> 标签底部对齐 */
+}
+
+.content .list-content .zu-tab a {
+    background: #fff;
+    border: solid #ccc;
+    border-width: 1px 1px 0;
+    border-bottom: 0;
+    color: #666;
+    display: inline-block;
+    font-size: 16px;
+    line-height: 37px;
+    margin-bottom: -1px;
+    margin-right: -1px;
+    padding: 0 30px;
+    position: relative;
+    text-decoration: none
+}
+
+.content .list-content .zu-tab .iconfont {
+    color: #62ab00;
+    display: inline-block;
+    font-family: iconfont;
+    font-size: 20px;
+    font-style: normal;
+    margin-right: 6px;
+    text-align: center;
+    vertical-align: top
+}
+
+.content .list-content .zu-tab a.curTab {
+    background: #62ab00;
+    border: 1px solid #62ab00;
+    color: #fff;
+    margin-right: 0
+}
+
+.content .list-content .zu-tab a.curTab .iconfont {
+    color: #fff
+}
+
+.content .list-content .zu-tab .firstTab:hover, .content .list-content .zu-tab .lastTab:hover {
+    background: #e6e6e6
+}
+
+.content .list-content .zu-sort {
+    border-bottom: 1px solid #e6e6e6;
+    color: #666;
+    font-size: 13px;
+    height: 40px;
+    line-height: 40px;
+    margin-top: 6px
+}
+
+.content .list-content .zu-sort .tit {
+    float: left;
+    padding-left: 21px
+}
+
+.content .list-content .zu-sort .tit em {
+    color: #f60;
+    padding: 0 2px 0 1px
+}
+
+.content .list-content .zu-sort .sort-cond {
+    float: right;
+    height: 40px
+}
+
+.content .list-content .zu-itemmod {
+    background-color: #fff;
+    border-bottom: 1px dashed #e6e6e6;
+    cursor: pointer;
+    height: 178px;
+    width: 1200px;
+    padding: 20px;
+    position: relative
+}
+
+.content .list-content .zu-itemmod .img {
+    float: left;
+    height: 135px;
+    position: relative;
+    width: 180px
+}
+
+.content .list-content .zu-itemmod .img img {
+    border: 0;
+    vertical-align: top
+}
+
+.content .list-content .zu-itemmod .img .many-icons {
+    background: rgba(51, 51, 51, .5);
+    bottom: 0;
+    color: #fff;
+    font-size: 18px;
+    height: 24px;
+    left: 0;
+    line-height: 24px;
+    position: absolute;
+    width: 30px
+}
+
+.content .list-content .zu-itemmod .img .iconfont {
+    color: #fff;
+    display: inline-block;
+    font-family: iconfont !important;
+    font-style: normal;
+    text-align: center
+}
+
+.content .list-content .zu-itemmod .zu-info {
+    color: #797979;
+    float: left;
+    font-size: 14px;
+    overflow: hidden;
+    padding-left: 20px;
+    width: 528px
+}
+
+.content .list-content .zu-itemmod .zu-info h3 {
+    display: -moz-flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    height: 34px;
+    line-height: 34px;
+    margin-bottom: 6px
+}
+
+.content .list-content .zu-itemmod .zu-info h3 a {
+    color: #333;
+    display: inline-block;
+    float: left;
+    font-size: 16px;
+    font-weight: 700;
+    max-width: 420px;
+    outline: 0;
+    overflow: hidden;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
+
+.content .list-content .zu-itemmod .zu-info h3 .anxvan-ico {
+    background: url(//pic4.58cdn.com.cn/nowater/fangfe/n_v232dbbc2491814f678efc1338295a80c4.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background: none \9;
+    display: inline-block;
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="//pic4.58cdn.com.cn/nowater/fangfe/n_v232dbbc2491814f678efc1338295a80c4.png", sizingMethod="scale");
+    -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='//pic4.58cdn.com.cn/nowater/fangfe/n_v232dbbc2491814f678efc1338295a80c4.png',sizingMethod='scale')";
+    height: 18px;
+    margin-left: 4px;
+    margin-top: 8px;
+    width: 30px
+}
+
+.content .list-content .zu-itemmod .zu-info .details-item {
+    height: 30px;
+    line-height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 440px
+}
+
+.content .list-content .zu-itemmod .zu-info .details-item a {
+    color: #666;
+    outline: 0;
+    text-decoration: none
+}
+
+.content .list-content .zu-itemmod .zu-info .bot-tag {
+    padding-top: 8px
+}
+
+.content .list-content .zu-itemmod .zu-info .bot-tag span {
+    border-radius: 16px;
+    float: left;
+    font-size: 12px;
+    height: 22px;
+    line-height: 22px;
+    margin-right: 10px;
+    padding: 0 10px
+}
+
+.content .list-content .zu-itemmod .zu-info .bot-tag .cls-2 {
+    background-color: #f2f6ed;
+    color: #799374
+}
+
+.content .list-content .zu-itemmod .zu-info .bot-tag .cls-3 {
+    background-color: #f0f4f8;
+    color: #6682ae
+}
+
+.content .list-content .zu-itemmod .zu-info .tag span {
+    background: #ccc;
+    display: inline-block;
+    font-size: 0;
+    height: 10px;
+    margin: 0 10px;
+    overflow: hidden;
+    text-indent: -9999px;
+    width: 1px
+}
+
+.content .list-content .zu-itemmod .jx-sign {
+    border: 1px solid #e1e1e1;
+    border-radius: 4px;
+    color: #e1e1e1;
+    font-size: 12px;
+    height: 16px;
+    line-height: 16px;
+    position: absolute;
+    right: 20px;
+    text-align: center;
+    top: 29px;
+    width: 32px
+}
+
+.content .list-content .zu-itemmod .zu-side {
+    float: right;
+    white-space: nowrap;
+    width: 112px
+}
+
+.content .list-content .zu-itemmod .zu-side p {
+    color: #eb5f00;
+    float: right;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 40px 0 10px;
+    text-align: right;
+    width: 100%
+}
+
+.content .list-content .zu-itemmod .zu-side p strong {
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 700;
+    vertical-align: baseline
+}
+
+.content .list-content .zu-itemmod:hover {
+    background-color: #f9f9f9
+}
+
+.content .list-content .zu-itemmod:hover .zu-info h3 a {
+    color: #f60;
+    text-decoration: underline
+}
+
+.content .adver-content {
+    float: right;
+    overflow: hidden;
+    position: relative;
+    width: 250px
+}
+

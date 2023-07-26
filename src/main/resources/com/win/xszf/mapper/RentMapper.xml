@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.win.xszf.mapper.RentMapper">
+
+    <insert id="addRent" parameterType="com.win.xszf.pojo.entity.Rent">
+        insert into rent(user_id, house_id, zfrq, people, zt, daoqi, agree, zfqx)
+        values (#{user_id}, #{house_id}, #{zfrq}, #{people}, #{zt}, #{daoqi}, #{agree}, #{zfqx})
+    </insert>
+
+    <insert id="add">
+        insert into rent(user_id, house_id, people, zfqx, agree, createTime)
+        values (#{user_id}, #{house_id}, #{people}, #{zfqx}, #{agree}, #{createTime})
+    </insert>
+
+    <delete id="deleteRentBy_id">
+        delete
+        from rent
+        where id = #{id}
+    </delete>
+
+    <update id="updataRent" parameterType="com.win.xszf.pojo.entity.Rent">
+        update rent
+        <set>
+            <if test="user_id != null">
+                user_id = #{user_id}
+            </if>
+            <if test="house_id != null">
+                ,house_id = #{house_id}
+            </if>
+            <if test="zfrq != null and zfrq !=''">
+                ,zfrq = #{zfrq}
+            </if>
+            <if test="people != null">
+                ,people = #{people}
+            </if>
+            <if test="zt != null">
+                ,zt = #{zt}
+            </if>
+            <if test="zfqx != null">
+                ,zfqx = #{zfqx}
+            </if>
+            <if test="no != null and no != ''">
+                ,`no` = #{no}
+            </if>
+            <if test="daoqi != null and daoqi != '' ">
+                ,daoqi = #{daoqi}
+            </if>
+            <if test="agree != null">
+                ,agree = #{agree}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--    <select id="selectRent" resultType="com.win.xszf.pojo.entity.Rent" parameterType="com.win.xszf.pojo.entity.Rent">-->
+    <!--        select * from rent-->
+    <!--        <where>-->
+    <!--            <if test="user_id != null">-->
+    <!--                user_id = #{user_id}-->
+    <!--            </if>-->
+    <!--            <if test="house_id != null">-->
+    <!--                ,house_id = #{house_id}-->
+    <!--            </if>-->
+    <!--            <if test="zfrq != null and zfrq !=''">-->
+    <!--                ,zfrq = #{zfrq}-->
+    <!--            </if>-->
+    <!--            <if test="people != null">-->
+    <!--                ,people = #{people}-->
+    <!--            </if>-->
+    <!--            <if test="zt != null">-->
+    <!--                ,zt = #{zt}-->
+    <!--            </if>-->
+    <!--            <if test="zt != null">-->
+    <!--                ,id = #{id}-->
+    <!--            </if>-->
+    <!--        </where>-->
+    <!--    </select>-->
+
+    <select id="pageQuery" resultType="com.win.xszf.pojo.vo.ZFXXVo"
+            parameterType="com.win.xszf.pojo.dto.RentPageQueryDto">
+        SELECT h.address, u.realname zhm, r.zt status
+        FROM house h
+        INNER JOIN rent r ON r.house_id = h.id
+        INNER JOIN user u ON r.user_id = u.id
+        WHERE h.user_id = #{user_id}
+        <if test="status != null">
+            AND r.zt = #{status}
+        </if>
+        <if test="address != null and address !=''">
+            AND h.address like concat('%',#{address},'%')
+        </if>
+        ORDER BY h.createTime DESC
+    </select>
+
+    <select id="pageXQQuery" resultType="com.win.xszf.pojo.vo.ZFXQVo"
+            parameterType="com.win.xszf.pojo.dto.RentPageQueryDto">
+        SELECT h.*, u.realname as fdm, r.daoqi
+        FROM house h
+                 JOIN rent r ON h.id = r.house_id
+                 JOIN `user` u ON u.id = h.user_id
+        WHERE r.user_id = #{id}
+    </select>
+
+
+    <!--业主查询-->
+    <select id="selectShZF" resultType="com.win.xszf.pojo.vo.SHZFVo">
+        SELECT r.id,
+               u.realname,
+               u.sex,
+               u.sfz,
+               u.phone,
+               u.Email,
+               h.address,
+               h.mph,
+               r.zfqx,
+               r.people
+        from rent r,
+             user u,
+             house h
+        WHERE r.user_id = u.id
+          AND r.house_id = h.id
+          AND r.agree = 1
+          and h.user_id = #{id}
+    </select>
+
+    <!--查询全部-->
+    <select id="fpcz" resultType="com.win.xszf.pojo.entity.Rent">
+        select *
+        from rent
+        where zt = 0
+    </select>
+    <!--获取租房信息id-->
+    <select id="getZfMsg" resultType="com.win.xszf.pojo.vo.ZFMsgVo">
+        SELECT r.id, r.zfqx, u.realname, u.phone, u.sfz, h.address, h.mph
+        FROM rent r
+                 JOIN `user` u ON r.user_id = u.id
+                 JOIN house h ON r.house_id = h.id
+        WHERE r.id NOT IN (SELECT zfid FROM hetong)
+          AND h.user_id = #{id}
+    </select>
+
+</mapper>

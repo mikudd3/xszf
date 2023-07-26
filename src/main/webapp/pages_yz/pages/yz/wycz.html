@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>我要出租</title>
+    <style>
+        .el-icon-plus:nth-child(1) {
+            margin: 50px;
+        }
+
+        .avatar-uploader .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .avatar-uploader .el-upload:hover {
+            border-color: #409EFF;
+        }
+
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 50px;
+            height: 50px;
+            line-height: 158px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <el-form ref="form" :model="form" label-width="200px">
+        <el-form-item label="地址" style="width: 600px">
+            <el-input v-model="form.address"></el-input>
+        </el-form-item>
+        <el-form-item label="门牌号" style="width: 600px">
+            <el-input v-model="form.mph"></el-input>
+        </el-form-item>
+        <el-form-item label="房子类型" style="width: 700px">
+            <input type="radio" id="big" value="0" v-model="form.type">
+            <label for="big">大别野</label>
+            <input type="radio" id="middle" value="1" v-model="form.type" style="margin-left: 20px">
+            <label for="middle">公寓</label>
+            <input type="radio" id="small1" value="2" v-model="form.type" style="margin-left: 20px">
+            <label for="small1">3室1厅</label>
+            <input type="radio" id="small2" value="3" v-model="form.type" style="margin-left: 20px">
+            <label for="small2">2室1厅</label>
+            <input type="radio" id="small3" value="4" v-model="form.type" style="margin-left: 20px">
+            <label for="small3">1室1厅</label>
+        </el-form-item>
+        <el-form-item label="租金" style="width: 400px">
+            <el-input v-model="form.basemoney"></el-input>
+        </el-form-item>
+        <el-form-item label="押金" style="width: 400px">
+            <el-input v-model="form.yajin"></el-input>
+        </el-form-item>
+        <el-form-item label="面积" style="width: 400px">
+            <el-input v-model="form.area"></el-input>
+        </el-form-item>
+        <el-form-item label="房子编号" style="width: 400px">
+            <el-input v-model="form.house_no"></el-input>
+        </el-form-item>
+        <el-form-item label="房屋配套">
+            <el-button type="primary" @click="showList">添加配套</el-button>
+            <span v-for="item in form.house_add" :key="item" style="margin: 20px">
+                        {{ item }} <!-- 将选中的配套显示在页面上 -->
+            </span>
+        </el-form-item>
+        <el-dialog title="配套列表" :visible.sync="dialogVisible">
+            <el-checkbox-group v-model="form.house_add">
+                <el-checkbox v-for="item in list" :label="item" :key="item">{{ item }}</el-checkbox>
+            </el-checkbox-group>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="addItems">确定</el-button>
+            </span>
+        </el-dialog>
+        <el-form-item label="朝向" style="width: 400px">
+            <el-input v-model="form.toward"></el-input>
+        </el-form-item>
+        <el-form-item label="出租要求或说明" style="width: 400px">
+            <el-input v-model="form.statement"></el-input>
+        </el-form-item>
+        <el-form-item label="楼层" style="width: 400px">
+            <el-input v-model="form.floor"></el-input>
+        </el-form-item>
+        <el-form-item label="房屋装修(0精装；1简装）" style="width: 400px">
+            <el-input v-model="form.fwzx"></el-input>
+        </el-form-item>
+        <el-form-item label="图片:" prop="avatar" class="uploadImg">
+            <el-upload
+                    ref="upload"
+                    action="/common/upload"
+                    list-type="picture-card"
+                    :on-remove="handleRemove1"
+                    :on-success="handleUploadSuccess">
+                <i class="el-icon-plus"></i>
+            </el-upload>
+        </el-form-item>
+        <el-form-item label="证明材料:" prop="avatar" class="uploadImg">
+            <el-upload
+                    ref="upload"
+                    class="avatar-uploader"
+                    action="/common/upload"
+                    :show-file-list="false"
+                    :on-success="handleAvatarSuccess">
+                <img v-if="imageUrl" :src="imageUrl" class="avatar" style="width: 300px;height: 300px">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="onSubmit">立即添加</el-button>
+            <el-button>取消</el-button>
+        </el-form-item>
+    </el-form>
+</div>
+
+<script src="../../../plugins/js/vue.js"></script>
+<link rel="stylesheet" href="../../../plugins/element-ui/index.css">
+<script src="../../../plugins/element-ui/index.js"></script>
+<script src="../../../plugins/js/axios-0.18.0.js"></script>
+<script>
+    new Vue({
+        el: "#app",
+        data() {
+            return {
+                form: {
+                    image: [],
+                    house_add: [],  // 已选中的配套
+                    zmcl: ""
+                },
+                dialogVisible: false, // 控制配套列表弹窗的显示/隐藏
+                list: ['冰箱', '洗衣机', '热水器', '宽带', "沙发",
+                    "可做饭", "电视", "空调", "衣柜", "床",
+                    "卫生间", "阳台", "暖气"], // 可选的配套列表
+                imageUrl: ""
+            }
+        },
+        methods: {
+            showList() {
+                this.dialogVisible = true;
+            },
+            addItems() {
+                this.dialogVisible = false;
+            },
+            handleUploadSuccess(response, file) {
+                this.form.image.push(response.data) // 将图片地址保存到变量中
+                console.log(this.form.image)
+            },
+            handleAvatarSuccess(response, file) {
+                this.form.zmcl = response.data // 将图片地址保存到变量中
+                this.imageUrl = `/common/download?name=${this.form.zmcl}`
+                console.log(this.form.image)
+            },
+            onSubmit() {
+                axios({
+                    method: "post",
+                    url: "/house/add",
+                    data: this.form
+                }).then(resp => {
+                    this.$message.success("添加成功")
+                    //清空表单
+                    this.form = {};
+                    // 清空文件列表
+                    this.$refs.upload.clearFiles();
+                })
+            }
+        }
+    })
+</script>
+</body>
+</html>

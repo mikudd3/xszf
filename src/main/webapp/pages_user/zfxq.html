@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- 页面meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>租房详情</title>
+</head>
+<body>
+<div id="app">
+    <div class="content-header">
+        <h1>租房详情</h1>
+    </div>
+    <div class="app-container">
+        <div class="box">
+            <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
+                <el-table-column type="index" align="center" label="序号"></el-table-column>
+                <el-table-column prop="address" label="详细地址" align="center"></el-table-column>
+                <el-table-column prop="basemoney" label="租金" align="center"></el-table-column>
+                <el-table-column prop="yajin" label="押金" align="center"></el-table-column>
+                <el-table-column prop="fdm" label="房东名字" align="center"></el-table-column>
+                <el-table-column prop="daoqi" label="合约期" align="center"></el-table-column>
+                <el-table-column prop="status" label="状态" align="center">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.status === 1">在期</span>
+                        <span v-else-if="scope.row.status === 0">过期</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" align="center">
+                    <template slot-scope="scope">
+                        <el-button type="primary" size="mini" @click="getHeTong(scope.row)">下载合同</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
+    </div>
+    <!--分页工具条-->
+    <div class="block">
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[5, 10, 15, 20]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="totalCount">
+        </el-pagination>
+    </div>
+</div>
+</body>
+<!-- 引入组件库 -->
+<script src="../plugins/js/vue.js"></script>
+<link rel="stylesheet" href="../plugins/element-ui/index.css">
+<script src="../plugins/element-ui/index.js"></script>
+<link rel="stylesheet" href="css/style.css">
+<script src="../plugins/js/axios-0.18.0.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            currentPage: 1,
+            pageSize: 5,
+            totalCount: 0,
+            dataList: [
+                {
+                    id: "2",
+                    index: "1",
+                    address_detail: "学府雁园1栋0101室",
+                    basemoney: "1000",
+                    yajin: "1000",
+                    fangdong: "xx"
+                }
+            ],//当前页要展示的列表数据
+            id: 0,
+        },
+        //钩子函数，VUE对象初始化完成后自动执行
+        created() {
+            this.getUser();
+        },
+        methods: {
+            getHeTong(row) {
+                //下载合同的逻辑
+                axios({
+                    url: "/hetong/zkgethetong",
+                    method: "post",
+                    data: {
+                        id: row.id,
+                    },
+                }).then(resp => {
+                    //创建a标签并下载路径中的文件+resp.data.data.records.text
+                    const link = document.createElement('a');
+                    link.href = 'http://localhost:8080/image/img/house1.1.jpg';
+                    //value中设置文件名以及类型
+                    link.setAttribute('download', 'hetong.jpg');
+                    link.click();
+                })
+            },
+            getUser() {
+                axios({
+                    url: "/user/getUser",
+                    method: "get",
+                }).then(resp => {
+                    if (resp.data.code == 1) {
+                        this.id = resp.data.data.id;
+                        console.log(this.id)
+                        this.getAll();
+                    } else {
+                        this.$message.error(resp.data.msg);
+                    }
+                })
+            },
+            //列表
+            getAll() {
+                axios({
+                    method: "post",
+                    url: "/rent/pageXQ",
+                    data: {
+                        currentPage: this.currentPage,
+                        pageSize: this.pageSize,
+                        id: this.id
+                    }
+                }).then((res) => {
+                    this.dataList = res.data.data.records;
+                    //设置总记录数
+                    console.log(this.dataList);
+                    this.totalCount = res.data.data.total;
+                })
+
+            },
+        }
+    })
+</script>
+</html>

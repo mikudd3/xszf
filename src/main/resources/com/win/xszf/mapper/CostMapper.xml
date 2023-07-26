@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.win.xszf.mapper.CostMapper">
+    <insert id="addCost" parameterType="com.win.xszf.pojo.entity.Cost">
+        insert into cost(water_fee, electricity_fee, rent_fee, service_fee, season, house_id, zt,createTime)
+        values (#{water_fee}, #{electricity_fee}, #{rent_fee}, #{service_fee}, #{season}, #{house_id}, #{zt},#{createTime})
+    </insert>
+    <!--    <select id="selectCost" resultType="com.win.xszf.pojo.entity.Cost">-->
+    <!--        select * from cost-->
+    <!--        &#45;&#45; 根据房号，状态，季度-->
+    <!--        <where>-->
+    <!--            <if test="house_id != null and house_id != ''">-->
+    <!--                and house_id like concat('%',#{house_id},'%')-->
+    <!--            </if>-->
+    <!--            <if test="zt != null and zt != ''">-->
+    <!--                and zt = concat(#{zt})-->
+    <!--            </if>-->
+    <!--            <if test="season != null and season != ''">-->
+    <!--                and season like concat('%',#{season},'%')-->
+    <!--            </if>-->
+    <!--        </where>-->
+    <!--    </select>-->
+    <select id="selectzdy" resultType="com.win.xszf.pojo.entity.Cost">
+        select * from cost
+        <where>
+            <if test="season != null and season != ''">
+                and season like concat('%',#{season},'%')
+            </if>
+        </where>
+        order by createTime desc
+    </select>
+    <update id="updateCost">
+        update cost
+        <set>
+            <if test="house_id != null and house_id != ''">
+                house_id=#{house_id}
+            </if>
+            <if test="season != null and season != ''">
+                ,season=#{season}
+            </if>
+            <if test="zt!= null and zt != ''">
+                ,zt=#{zt}
+            </if>
+        </set>
+    </update>
+    <delete id="deleteCost">
+        delete
+        from cost
+        where id = #{id};
+    </delete>
+
+    <!--作为用户时分页查询-->
+    <select id="yHpageQuery" resultType="com.win.xszf.pojo.vo.FeiYonVo"
+            parameterType="com.win.xszf.pojo.dto.CostPageQueryDto">
+        -- //作为用户时的费用表
+        SELECT c.*, h.address
+        FROM cost c
+        JOIN rent r ON c.house_id = r.house_id
+        JOIN house h ON h.id = r.house_id
+        WHERE r.user_id = #{id}
+        <if test="season != null and season != ''">
+            and c.season like concat('%',#{season},'%')
+        </if>
+        <if test="address != null and address != ''">
+            and h.address like concat('%',#{address},'%')
+        </if>
+        <if test="zt != null and zt != ''">
+            and c.zt like concat('%',#{zt},'%')
+        </if>
+        order by c.createTime desc
+    </select>
+
+    <!--作为房东时分页查询-->
+    <select id="fdpageQuery" resultType="com.win.xszf.pojo.vo.FeiYonVo"
+            parameterType="com.win.xszf.pojo.dto.CostPageQueryDto">
+        SELECT c.*, h.address
+        FROM cost c
+        JOIN house h ON c.house_id = h.id
+        WHERE h.user_id = #{id}
+        <if test="season != null and season != ''">
+            and c.season like concat('%',#{season},'%')
+        </if>
+        <if test="house_no != null and house_no != ''">
+            and h.house_no like concat('%',#{house_no},'%')
+        </if>
+        <if test="zt != null and zt != ''">
+            and c.zt like concat('%',#{zt},'%')
+        </if>
+        order by c.createTime desc
+    </select>
+
+    <!--    用户统计水电费-->
+    <select id="tongji" resultType="com.win.xszf.pojo.vo.FeiYonVo">
+        SELECT *
+        from cost
+        where house_id = #{id}
+        ORDER BY createTime
+                DESC LIMIT 6
+    </select>
+
+
+</mapper>

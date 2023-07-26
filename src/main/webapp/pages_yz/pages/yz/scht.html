@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>上传合同</title>
+</head>
+<body>
+<div id="app">
+    <el-form ref="form" :model="form" label-width="200px">
+        <div>
+            <el-form-item label="上传合同" style="width: 600px">
+                <el-upload
+                        class="upload-demo"
+                        action="/common/upload"
+                        :on-preview="handlePreview"
+                        :on-success="handleSuccess"
+                        multiple
+                        :limit="1">
+                    <el-button size="small" type="primary">上传合同</el-button>
+                </el-upload>
+            </el-form-item>
+            <el-form-item label="关联" style="width: 600px">
+                <el-button type="primary" @click="getAll()">查看租客和房子</el-button>
+            </el-form-item>
+            <el-dialog title="信息" :visible.sync="dialogVisible">
+                <el-table :data="hetonglist">
+                    <el-table-column type="index" align="center" label="序号"></el-table-column>
+                    <el-table-column prop="realname" align="center" label="租客名"></el-table-column>
+                    <el-table-column prop="phone" label="租客电话" align="center"></el-table-column>
+                    <el-table-column prop="sfz" label="租客身份证" align="center"></el-table-column>
+                    <el-table-column prop="address" label="房子地址" align="center"></el-table-column>
+                    <el-table-column prop="mph" label="门牌号" align="center"></el-table-column>
+                    <!-- 添加点击事件并传递id -->
+                    <el-table-column label="操作" align="center">
+                        <template slot-scope="scope">
+                            <el-button type="primary" @click="handleClick(scope.row)">点击</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-dialog>
+            <el-form-item>
+                <div v-if="selectedHouse">
+                    <!-- 展示选中的房子数据 -->
+                    <p>租客名：{{ selectedHouse.realname}}</p>
+                    <p>租客电话: {{selectedHouse.phone}}</p>
+                    <p>租客身份证: {{selectedHouse.sfz}}</p>
+                    <p>房子地址: {{selectedHouse.address}}</p>
+                    <p>门牌号: {{selectedHouse.mph}}</p>
+                </div>
+            </el-form-item>
+        </div>
+
+        <el-form-item>
+            <el-button type="primary" @click="onSubmit">确定</el-button>
+            <el-button>取消</el-button>
+        </el-form-item>
+    </el-form>
+</div>
+
+<script src="../../../plugins/js/vue.js"></script>
+<link rel="stylesheet" href="../../../plugins/element-ui/index.css">
+<script src="../../../plugins/element-ui/index.js"></script>
+<script src="../../../plugins/js/axios-0.18.0.js"></script>
+
+<script>
+    new Vue({
+        el: "#app",
+        data() {
+            return {
+                dialogVisible: false, // 控制配套列表弹窗的显示/隐藏
+                hetonglist: [],
+                selectedHouse: {},
+                zfid: 0,
+                user_id: 0,
+                imageUrl: ""
+            }
+        },
+        created() {
+            this.getUser();
+        },
+        methods: {
+            handleSuccess(response, file, fileList) {
+                this.imageUrl = response.data;
+            },
+            getUser() {
+                axios({
+                    url: "/user/getUser",
+                    method: "get",
+                }).then(resp => {
+                    if (resp.data.code == 1) {
+                        this.user_id = resp.data.data.id;
+                    } else {
+                        this.$message.error(resp.data.msg);
+                    }
+                })
+            },
+            getAll() {
+                axios({
+                    url: "/rent/getZFMsg",
+                    method: "get",
+                    params: {
+                        user_id: this.user_id
+                    }
+                }).then(resp => {
+                    if (resp.data.code == 1) {
+                        this.hetonglist = resp.data.data;
+                        this.dialogVisible = true;
+                    } else {
+                        this.$message.error(resp.data.msg)
+                    }
+                })
+
+            },
+            handleClick(row) {
+                this.selectedHouse = row;
+                this.zfid = row.id;
+            },
+            onSubmit() {
+                axios({
+                    method: "post",
+                    url: "/hetong/scheTong",
+                    data: {
+                        zfid: this.zfid,
+                        image: this.imageUrl
+                    }
+                }).then(resp => {
+                    if (resp.data.code == 1) {
+                        this.$message.success("添加成功")
+                        //清空表单
+                        this.selectedHouse = {};
+                        this.zfid = 0;
+                        this.user_id = 0;
+                        this.imageUrl = 0;
+                    } else {
+                        this.$message(resp.data.msg)
+                    }
+                })
+            },
+        }
+    })
+</script>
+</body>
+</html>

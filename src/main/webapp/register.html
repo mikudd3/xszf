@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+
+        }
+
+        body {
+            background: url("https://img.zcool.cn/community/03750ee59478580a8012193a369e52f.jpg");
+            background-size: cover;
+            background-position: center;
+        }
+
+        .box {
+            width: 356px;
+            height: 339px;
+            margin: 200px auto;
+        }
+
+        .box #btn {
+            width: 356px;
+            height: 50px;
+            background-color: skyblue;
+            color: #fff;
+            border: none
+        }
+
+        .box input {
+            width: 356px;
+            height: 50px;
+            border: 1px solid #ccc;
+            padding-left: 15px;
+            margin-bottom: 14px;
+            box-sizing: border-box;
+        }
+
+        .help {
+            margin-top: 10px;
+        }
+
+        .help p {
+            font-size: 14px;
+        }
+
+        .help p:nth-child(1) {
+            float: left;
+            color: red;
+        }
+
+        .help p:nth-child(2) {
+            float: right;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+<form id="form2" >
+    <div class="box">
+        <input type="text" v-model="username" placeholder="用户名" id="yhm">
+        <input type="password" v-model="password" id="password" placeholder="密码">
+        <input type="password" v-model="password2" placeholder="请再次输入密码">
+        <input type="text" placeholder="电话" v-model="phone" id="phone">
+        <input type="text" placeholder="性别" v-model="sex" id="sex">
+        <input type="text" placeholder="姓名" v-model="realname" id="realname">
+        <input type="text" placeholder="身份证" v-model="sfz" id="sfz">
+        <input type="text" placeholder="邮箱" v-model="email" id="email">
+        <input type="button" value="注册" id="btn"  @click="doRegister()">
+        <div class="help">
+            <p><a href="login.html">返回登录</a></p>
+        </div>
+    </div>
+</form>
+</body>
+<script src="plugins/js/vue/vue.js"></script>
+<link rel="stylesheet" href="plugins/element-ui/index.css">
+<script src="plugins/element-ui/index.js"></script>
+<script src="plugins/js/axios-0.18.0.js"></script>
+<script src="plugins/js/register.js"></script>
+</html>

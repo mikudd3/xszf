@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" rev="stylesheet" href="css/home.css" type="text/css"/>
+    <link rel="stylesheet" href="css/index.css">
+    <style>
+        #map {
+            width: 880px;
+            height: 300px;
+        }
+    </style>
+</head>
+<body>
+<div id="header">
+    <div>
+        <img src="image/img/logo2(已去底).png" style="width: 100px;margin: auto;">
+        <img src="image/img/logo1(已去底).png" style="width: 200px;margin-top: 20px;">
+        <span id="right">
+                <a href="index.html" class="active">首页</a>
+                <input type="text" style="margin-left: 130px;" placeholder="搜索" id="ipu" @click="search()">
+                <a href="login.html">登录</a>
+				<a href="register.html">注册</a>
+                <img :src="image" id="tx" @click="toUser()">
+        </span>
+    </div>
+</div>
+<div class="wrapper">
+    <div id="getTitle">
+        <h1 class="house-title">
+            <div class="strongbox" style="font-weight: normal;">{{title.title}}</div>
+        </h1>
+        <div class="title-basic-info clearfix" id="getHouse">
+            <!--显示数据-->
+            <span class="light info-tag"><em><b class="strongbox"
+                                                style="font-weight: normal;">{{title.basemoney}}</b></em>元/月</span>
+            <span class="info-tag">
+                 <em style="font-size: 1.5em"><b class="strongbox" style="font-weight: normal;">
+                     <b v-if="title.type === 0">大别野</b>
+                     <b v-else-if="title.type === 1">公寓</b>
+                     <b v-else-if="title.type === 2">3室1厅</b>
+                     <b v-else-if="title.type === 3">2室1厅</b>
+                     <b v-else-if="title.type === 4">1室1厅</b>
+                </b></em>
+            </span>
+            <span class="info-tag no-line"><em><b class="strongbox"
+                                                  style="font-weight: normal;">{{title.area}}</b></em>平方米</span>
+            <ul class="title-label cf">
+                <li class="title-label-item buy">{{title.toward}}</li>
+            </ul>
+        </div>
+    </div>
+    <div class="mainbox cf">
+        <div class="lbox">
+            <div class="switch_warpper">
+                <div class="switch_with_map">
+                    <div id="slider">
+                        <div class="slider-wrapper" style="">
+                            <img :src="currentSlide.image" alt=""/>
+                        </div>
+                        <div class="slider-footer">
+                            <p>{{ currentSlide.title }}</p>
+                            <ul class="slider-indicator">
+                                <li v-for="(slide, index) in slides" :key="index"
+                                    :class="{ active: index === currentIndex }"></li>
+                            </ul>
+                            <div class="toggle">
+                                <button class="prev" @click="prevSlide">&lt;</button>
+                                <button class="next" @click="nextSlide">&gt;</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--房屋信息-->
+            <!--            数据-->
+            <div class="mod-title bottomed">
+                <h2 id="houseInfo" class="title nav-scroll">房屋信息</h2>
+            </div>
+            <div id="home">
+                <ul class="house-info-zufang cf">
+                    <li class="full-line cf">
+							<span class="price"><em><b class="strongbox"
+                                                       style="font-weight: normal;">{{house.basemoney}}</b></em>元/月</span>
+                    </li>
+                    <li class="house-info-item">
+                        <span class="type">户型：</span>
+                        <span class="info"><b class="strongbox" style="font-weight: normal;">
+                            <b v-if="house.type === 0">大别野</b>
+                            <b v-else-if="house.type === 1">公寓</b>
+                            <b v-else-if="house.type === 2">3室1厅</b>
+                            <b v-else-if="house.type === 3">2室1厅</b>
+                            <b v-else-if="house.type === 4">1室1厅</b>
+                        </b>
+                        </span>
+                    </li>
+                    <li class="house-info-item">
+                        <span class="type">面积：</span>
+                        <span class="info"><b class="strongbox"
+                                              style="font-weight: normal;">{{house.area}}平方米</b></span>
+                    </li>
+                    <li class="house-info-item">
+                        <span class="type">朝向：</span>
+                        <span class="info">{{house.toward}}</span>
+                    </li>
+                    <li class="house-info-item">
+                        <span class="type">楼层：</span>
+                        <span class="info">{{house.floor}}</span>
+                    </li>
+                    <li class="house-info-item">
+                        <span class="type">装修：</span>
+                        <span class="info">
+                            <b v-if="house.fwzx === 0">精装</b>
+                            <b v-else-if="house.fwzx === 1">简装</b>
+                        </span>
+                    </li>
+                    <li class="house-info-item">
+                        <span class="type">地址：</span>
+                        <a href="" class="link" target="_blank" _soj="propview">{{house.address}}</a>
+                    </li>
+                </ul>
+            </div>
+
+
+            <div id="getHouseAdd">
+                <div class="mod-title bottomed">
+                    <h2 class="title">房屋配套</h2>
+                </div>
+                <ul class="house-info-peitao cf" data-trace="{'pc_zfdy_fypt_show':1}" data-visibled="true">
+                    <li v-for="facility in houseInfo" class="peitao-item has">
+                        <i class="iconfont">{{ facility.icon }}</i>
+                        <div class="peitao-info">{{ facility.name }}</div>
+                    </li>
+                </ul>
+            </div>
+            <div class="mapbox">
+                <div class="mod-title bottomed">
+                    <h2 class="title">地图</h2>
+                </div>
+                <div id="map"></div>
+            </div>
+        </div>
+        <div class="rbox">
+            <div class="broker-card">
+                <div class="broker-border" id="getUser">
+                    <h2 style="padding-left: 70px ;padding-bottom: 20px">房主信息</h2>
+                    <img class="broker-photo-main" data-tracker="pc_detail_maincontact_photo_click"
+                         :src="user.tx"/>
+                    <h2 class="broker-name">{{user.realname}}</h2>
+                    <div class="broker-line">联系电话：{{user.phone}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="footer">
+    京公网安备 11010802020110号 © Copyright2023. xiaosongzufang版权所有 | 京ICP备11024110号
+</div>
+</body>
+<script type="text/javascript">
+    window._AMapSecurityConfig = {
+        securityJsCode: '04b900b41bfcefdabc0e09aea7a8cfd9',
+    }
+</script>
+<script type="text/javascript"
+        src="https://webapi.amap.com/maps?v=1.4.15&key=2a226361c1f6ce6d5baf58eb7b308283"></script>
+<script src="js/vue.js"></script>
+<script src="js/axios-0.18.0.js"></script>
+<script src="js/home.js"></script>
+<script src="js/homedate.js"></script>
+<script>
+    new Vue({
+        el: "#tx",
+        data() {
+            return {
+                image: "image/img/7bf8f68063944804a4d02ea967e7200b.jpg",
+                yhsf: 0,
+            }
+        },
+        mounted() {
+            this.getUser();
+        },
+        methods: {
+            getUser() {
+                axios({
+                    url: "/user/getUser",
+                    method: "get",
+                }).then(resp => {
+                    let user = resp.data.data;
+                    this.image = `/common/download?name=${user.tx}`;
+                    this.yhsf = user.yhsf;
+                    console.log(this.image)
+                })
+            },
+            toUser() {
+                if (this.yhsf == 1) {
+                    location.href = "pages_yz/pages/main.html"
+                } else {
+                    location.href = "pages_user/main.html"
+                }
+            }
+        }
+    })
+</script>
+
+
+</html>

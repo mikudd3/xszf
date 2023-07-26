@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>业主中心</title>
+    <style>
+        .el-header {
+            background-color: #72767b;
+        }
+
+        .manger {
+            margin: 40px auto;
+            font-size: 24px;
+            color: whitesmoke;
+        }
+
+        .el-header a {
+            text-decoration: none;
+            font-size: 24px;
+            color: white;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+<div id="div">
+    <el-container>
+        <!-- 头部 -->
+        <el-header class="el-header" height="100px">
+            <el-container>
+                <a href="/index.html">主页</a>
+                <p class="manger">个人中心</p>
+                <a href="/login.html">登录</a>
+            </el-container>
+        </el-header>
+
+        <!-- 中间部分 -->
+        <el-container style="height: 800px; border: 1px solid #eee">
+            <!-- 侧边栏 -->
+            <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
+                <el-menu>
+                    <el-submenu index="1">
+                        <template slot="title"><i class="el-icon-menu"></i>个人信息</template>
+                        <el-menu-item-group>
+                            <el-menu-item index="1-1" @click="finduser()"><i class="el-icon-help">业主中心</i>
+                            </el-menu-item>
+                        </el-menu-item-group>
+                    </el-submenu>
+                    <el-submenu index="2">
+                        <template slot="title"><i class="el-icon-menu"></i>我是业主</template>
+                        <el-menu-item-group>
+                            <el-menu-item index="2-1" @click="findhouse()"><i class="el-icon-help">房子管理</i>
+                            </el-menu-item>
+                            <el-menu-item index="2-2" @click="findrent()"><i class="el-icon-help">租房管理</i>
+                            </el-menu-item>
+                            <el-menu-item index="2-3" @click="findhetong()"><i class="el-icon-help">合同管理</i>
+                            </el-menu-item>
+                            <el-menu-item index="2-4" @click="findmoney()"><i class="el-icon-help">费用管理</i>
+                            </el-menu-item>
+                            <el-menu-item index="2-5" @click="findweihu()"><i class="el-icon-help">维护管理</i>
+                            </el-menu-item>
+                            <el-menu-item index="2-6" @click="findzh()"><i class="el-icon-help">租户管理</i>
+                            </el-menu-item>
+                            <el-menu-item index="2-7" @click="findshzf()"><i class="el-icon-help">审核出租</i>
+                            </el-menu-item>
+                            <el-menu-item index="2-8" @click="findcz()"><i class="el-icon-help">出租房子</i>
+                            </el-menu-item>
+                            <el-menu-item index="2-9" @click="findscht()"><i class="el-icon-help">上传合同</i>
+                            </el-menu-item>
+                        </el-menu-item-group>
+                    </el-submenu>
+
+                    <el-submenu index="3">
+                        <template slot="title"><i class="el-icon-menu"></i>我是用户</template>
+                        <el-menu-item-group>
+                            </el-menu-item>
+                            <el-menu-item index="3-1" @click="getZfxq()"><i class="el-icon-help"></i>费用详情
+                            </el-menu-item>
+                            <el-menu-item index="3-2" @click="getFY()"><i class="el-icon-help"></i>维修详情
+                            </el-menu-item>
+                            <el-menu-item index="3-3" @click="getWX()"><i class="el-icon-help"></i>租房详情
+                            </el-menu-item>
+                            <el-menu-item index="3-4" @click="getwyzf()"><i class="el-icon-help"></i>我要租房
+                            </el-menu-item>
+                            <el-menu-item index="5" @click="gettongji()"><i class="el-icon-help"></i>统计
+                            </el-menu-item>
+                        </el-menu-item-group>
+                    </el-submenu>
+                </el-menu>
+            </el-aside>
+            <el-container>
+                <!-- 主区域部分 -->
+                <el-main>
+                    <iframe :src="iframeSrc" frameborder="false"
+                            style="top:80px;left: 120px; width: 100%;height:900px"></iframe>
+                </el-main>
+            </el-container>
+        </el-container>
+    </el-container>
+</div>
+</body>
+<script src="../../plugins/js/vue.js"></script>
+<link rel="stylesheet" href="../../plugins/element-ui/index.css">
+<script src="../../plugins/element-ui/index.js"></script>
+<script>
+    new Vue({
+        el: "#div",
+        data: {
+            iframeSrc: "manager.html",
+            name: "管理员",
+        },
+        mounted() {
+            let emp = localStorage.getItem("emp");
+            console.log(emp)
+            this.name = emp.username;
+        },
+        methods: {
+            finduser() {
+                this.iframeSrc = "userlist.html"
+            },
+            findhouse() {
+                this.iframeSrc = "yz/house.html"
+            },
+            findhetong() {
+                this.iframeSrc = "yz/hetong.html"
+            },
+            findrent() {
+                this.iframeSrc = "yz/zfxx.html"
+            },
+            findmoney() {
+                this.iframeSrc = "yz/feiyong.html"
+            },
+            findweihu() {
+                this.iframeSrc = "yz/whgl.html"
+            },
+            findzh() {
+                this.iframeSrc = "yz/zhgl.html"
+            },
+            findcz() {
+                this.iframeSrc = "yz/wycz.html"
+            },
+            getZfxq() {
+                this.iframeSrc = "user/feiyon.html"
+            },
+            getFY() {
+                this.iframeSrc = "user/weixiu.html"
+            },
+            getWX() {
+                this.iframeSrc = "user/zfxq.html"
+            },
+            gettongji() {
+                this.iframeSrc = "user/datatj.html"
+            },
+            getwyzf() {
+                this.iframeSrc = "user/wyzf.html"
+            },
+            findshzf() {
+                this.iframeSrc = "yz/shzf.html"
+            },
+            findscht(){
+                this.iframeSrc = "yz/scht.html"
+            }
+
+        }
+    });
+</script>
+</html>

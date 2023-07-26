@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>我要租房</title>
+</head>
+<body>
+<div id="app">
+    <el-form ref="form" :model="form" label-width="200px">
+        <el-form-item label="租期" style="width: 600px">
+            <el-input v-model="zfqx"></el-input>
+        </el-form-item>
+        <el-form-item label="几人入住" style="width: 600px">
+            <el-input v-model="people"></el-input>
+        </el-form-item>
+        <div>
+            <el-form-item label="租房" style="width: 600px">
+                <el-button type="primary" @click="getAll()">查看房子</el-button>
+            </el-form-item>
+            <el-dialog title="房子列表" :visible.sync="dialogVisible">
+                <div class="filter-container">
+                    <el-input placeholder="地址" v-model="address" style="width: 200px;"
+                              class="filter-item"></el-input>
+                    <el-button type="primary" @click="getAll()" class="dalfBut">查询</el-button>
+                </div>
+                <el-table :data="houseList">
+                    <el-table-column type="index" align="center" label="序号"></el-table-column>
+                    <el-table-column prop="realname" align="center" label="房东名"></el-table-column>
+                    <el-table-column prop="mph" label="门牌号" align="center"></el-table-column>
+                    <el-table-column prop="address" label="地址详细" align="center"></el-table-column>
+                    <el-table-column prop="basemoney" label="租金" align="center"></el-table-column>
+                    <el-table-column prop="yajin" label="押金" align="center"></el-table-column>
+                    <el-table-column prop="statement" label="说明" align="center"></el-table-column>
+                    <!-- 添加点击事件并传递id -->
+                    <el-table-column label="操作" align="center">
+                        <template slot-scope="scope">
+                            <el-button type="primary" @click="handleClick(scope.row)">点击</el-button>
+                        </template>
+                    </el-table-column>
+                    </el-table-column>
+                </el-table>
+                <div class="block">
+                    <el-pagination
+                            @size-change="handleSizeChange"
+                            @current-change="handleCurrentChange"
+                            :current-page="currentPage"
+                            :page-sizes="[5, 10, 15, 20]"
+                            :page-size="pageSize"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="totalCount">
+                    </el-pagination>
+                </div>
+            </el-dialog>
+            <el-form-item>
+                <div v-if="selectedHouse">
+                    <!-- 展示选中的房子数据 -->
+                    <p>房东名：{{ selectedHouse.realname}}</p>
+                    <p>门牌号: {{selectedHouse.mph}}</p>
+                    <p>地址详细: {{selectedHouse.address}}</p>
+                    <p>租金: {{selectedHouse.basemoney}}</p>
+                    <p>押金: {{selectedHouse.yajin}}</p>
+                    <p>说明: {{selectedHouse.statement}}</p>
+                    <!-- 其他数据展示 -->
+                </div>
+            </el-form-item>
+        </div>
+
+        <el-form-item>
+            <el-button type="primary" @click="onSubmit">确定</el-button>
+            <el-button>取消</el-button>
+        </el-form-item>
+    </el-form>
+</div>
+
+<script src="../plugins/js/vue.js"></script>
+<link rel="stylesheet" href="../plugins/element-ui/index.css">
+<script src="../plugins/element-ui/index.js"></script>
+<script src="../plugins/js/axios-0.18.0.js"></script>
+
+<script>
+    new Vue({
+        el: "#app",
+        data() {
+            return {
+                currentPage: 1,
+                pageSize: 5,
+                totalCount: 0,
+                pagination: {},
+                dialogVisible: false, // 控制配套列表弹窗的显示/隐藏
+                houseList: [],
+                selectedHouse: {},
+                address: "",
+                user_id: 0,
+                house_id: 0,
+                zfqx: 0,
+                people: 0
+            }
+        },
+        created() {
+            this.getUser();
+        },
+        methods: {
+            getUser() {
+                axios({
+                    url: "/user/getUser",
+                    method: "get",
+                }).then(resp => {
+                    if (resp.data.code == 1) {
+                        this.user_id = resp.data.data.id;
+                        console.log(this.user_id)
+                    } else {
+                        this.$message.error(resp.data.msg);
+                    }
+                })
+            },
+            getAll() {
+                axios({
+                    url: "/house/wyzfPage",
+                    method: "post",
+                    data: {
+                        currentPage: this.currentPage,
+                        pageSize: this.pageSize,
+                        address: this.address
+                    }
+                }).then(resp => {
+                    this.houseList = resp.data.data.records;
+                    this.totalCount = resp.data.data.total;
+                    this.dialogVisible = true;
+                })
+
+            },
+            handleClick(row) {
+                this.selectedHouse = row;
+                this.house_id = row.id;
+                console.log(this.house_id)
+            },
+            onSubmit() {
+                axios({
+                    method: "post",
+                    url: "/rent/wyzf",
+                    data: {
+                        user_id: this.user_id,
+                        house_id: this.house_id,
+                        zfqx: this.zfqx,
+                        people: this.people
+                    }
+                }).then(resp => {
+                    if (resp.data.code == 1) {
+                        this.$message.success("添加成功")
+                        //清空表单
+                        this.user_id = 0;
+                        this.house_id = 0
+                        this.zfqx = 0;
+                        this.people = 0;
+                        this.selectedHouse = {}
+                    } else {
+                        this.$message(resp.data.msg)
+                    }
+                })
+            },
+            handleCurrentChange(val) {
+                this.currentPage = val;
+                this.getAll();
+            },
+            handleSizeChange(val) {
+                this.pageSize = val;
+                this.getAll();
+            }
+        }
+    })
+</script>
+
+</body>
+</html>

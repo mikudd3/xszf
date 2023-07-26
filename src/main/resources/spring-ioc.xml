@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                            http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/context
+                            http://www.springframework.org/schema/context/spring-context.xsd
+                            http://www.springframework.org/schema/aop
+                            https://www.springframework.org/schema/aop/spring-aop.xsd
+                            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <!-- 配置 TaskExecutor -->
+    <bean id="taskExecutor" class="com.win.xszf.common.TaskExecutor" />
+
+    <!-- 配置 TaskScheduler，并设置每日定时任务 -->
+    <task:scheduler id="taskScheduler" pool-size="1" />
+
+    <!--设置为每日触发-->
+    <task:scheduled-tasks scheduler="taskScheduler">
+        <task:scheduled ref="taskExecutor" method="executeDailyTask" cron="0 0 0 * * *" />
+    </task:scheduled-tasks>
+
+    <context:annotation-config />
+    <!-- 扫描 base-package 下需要由 IOC 管理的JavaBean -->
+    <context:component-scan base-package="com.win.xszf" />
+    <!-- Spring AOP -->
+    <aop:aspectj-autoproxy />
+</beans>

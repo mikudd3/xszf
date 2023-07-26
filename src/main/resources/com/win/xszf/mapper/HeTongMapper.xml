@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.win.xszf.mapper.HeTongMapper">
+
+    <!--插入操作-->
+    <insert id="insert">
+        insert into hetong(text, zfid, zt)
+        values (#{text}, #{zfid}, #{zt})
+    </insert>
+
+    <!--更新合同状态-->
+    <update id="updata">
+        update hetong
+        set zt = #{zt}
+    </update>
+
+    <!--通过合同id查询合同-->
+    <select id="yzgethetong" resultType="com.win.xszf.pojo.vo.HeTongVo">
+        select * from hetong where id =#{id}
+    </select>
+
+    <!--通过房东id查询其拥有所有合同-->
+    <select id="selectYz" resultType="com.win.xszf.pojo.vo.HeTongVo" parameterType="com.win.xszf.pojo.dto.HeTongPageQueryDot">
+        select hetong.id,hetong.text,house.address,hetong.zt
+        from hetong,rent,house
+        where rent.id = hetong.zfid
+        and rent.house_id = house.id
+        and house.user_id = #{id}
+    </select>
+
+    <!--租客通过租房id查询其合同-->
+    <select id="selectZk" resultType="com.win.xszf.pojo.entity.Hetong">
+        select text
+        from hetong
+        where  hetong.zfid = #{id}
+    </select>
+</mapper>

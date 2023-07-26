@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- 页面meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>维护管理</title>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,employee-scalable=no" name="viewport">
+</head>
+<body class="hold-transition">
+<div id="app">
+    <div class="content-header">
+        <h1>维修管理</h1>
+    </div>
+    <div class="app-container">
+        <div class="box">
+            <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
+                <el-table-column type="index" align="center" label="序号"></el-table-column>
+                <el-table-column prop="address" label="地址" align="center"></el-table-column>
+                <el-table-column prop="type" label="项目" align="center"></el-table-column>
+                <el-table-column prop="realname" label="申请人" align="center"></el-table-column>
+                <el-table-column prop="phone" label="联系方式" align="center"></el-table-column>
+                <el-table-column prop="set_date" label="报修日期" align="center"></el-table-column>
+                <el-table-column prop="status" label="维修状态" align="center">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.status === 0">审核中</span>
+                        <span v-else-if="scope.row.status === 1">维修中</span>
+                        <span v-else-if="scope.row.status === 2">维修完成</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" align="center">
+                    <template slot-scope="scope">
+                        <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">信息更新</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+
+        </div>
+    </div>
+
+    <!-- 维修信息更新标签弹层 -->
+    <div class="add-form">
+        <el-dialog title="信息更新" :visible.sync="dialogFormVisible">
+            <el-form ref="dataAddForm" :model="formData" label-position="right"
+                     label-width="100px">
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="维修状态" required prop="status">
+                            <template>
+                                <el-select v-model="formData.status" placeholder="请选择维修状态">
+                                    <el-option label="审核中" :value="0"></el-option>
+                                    <el-option label="维修中" :value="1"></el-option>
+                                    <el-option label="维修完成" :value="2"></el-option>
+                                </el-select>
+                            </template>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="费用" prop="money">
+                            <el-input v-model="formData.money" type="number"/>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="维修日期" prop="date">
+                            <template>
+                                <el-date-picker value-format="yyyy-MM-dd" v-model="formData.date" type="date" placeholder="请选择日期"></el-date-picker>
+                            </template>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取消</el-button>
+                <el-button type="primary" @click="updata()">更新</el-button>
+            </div>
+        </el-dialog>
+    </div>
+
+    <!--分页工具条-->
+    <div class="block">
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[5, 10, 15, 20]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="totalCount">
+        </el-pagination>
+    </div>
+
+</div>
+
+</body>
+
+<!-- 引入组件库 -->
+
+<script src="../../../plugins/js/vue.js"></script>
+<link rel="stylesheet" href="../../../plugins/element-ui/index.css">
+<script src="../../../plugins/element-ui/index.js"></script>
+<link rel="stylesheet" href="../../../css/style.css">
+<script src="../../../plugins/js/axios-0.18.0.js"></script>
+<script src="../../js/mtmng.js"></script>
+
+</html>

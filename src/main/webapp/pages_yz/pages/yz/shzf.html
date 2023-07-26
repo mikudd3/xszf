@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>租房审核</title>
+</head>
+<body class="hold-transition">
+<div id="app">
+    <div class="content-header">
+        <h1>租户管理</h1>
+    </div>
+    <div class="app-container">
+        <div class="box">
+            <!-- 表格-->
+            <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
+                <el-table-column type="index" align="center" label="序号"></el-table-column>
+                <el-table-column prop="realname" label="姓名" align="center"></el-table-column>
+                <el-table-column prop="sex" label="性别" align="center"></el-table-column>
+                <el-table-column prop="sfz" label="身份证" align="center"></el-table-column>
+                <el-table-column prop="phone" label="联系方式" align="center"></el-table-column>
+                <el-table-column prop="email" label="邮箱" align="center"></el-table-column>
+                <el-table-column prop="address" label="地址" align="center"></el-table-column>
+                <el-table-column prop="mph" label="门牌号" align="center"></el-table-column>
+                <el-table-column prop="zfqx" label="租房期限" align="center"></el-table-column>
+                <el-table-column prop="people" label="几人住" align="center"></el-table-column>
+                <el-table-column label="操作" align="center">
+                    <template slot-scope="scope">
+                        <el-button type="primary" size="mini" @click="tycz(scope.row)">同意出租</el-button>
+                        <el-button type="danger" size="mini" @click="jjcz(scope.row)">拒绝出租</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+
+        </div>
+    </div>
+    <!--分页工具条-->
+    <div class="block">
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[5, 10, 15, 20]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="totalCount">
+        </el-pagination>
+    </div>
+</div>
+</body>
+<!-- 引入组件库 -->
+<script src="../../../plugins/js/vue.js"></script>
+<link rel="stylesheet" href="../../../plugins/element-ui/index.css">
+<script src="../../../plugins/element-ui/index.js"></script>
+<script src="../../../plugins/js/axios-0.18.0.js"></script>
+<script src="../../js/shzf.js"></script>
+</html>

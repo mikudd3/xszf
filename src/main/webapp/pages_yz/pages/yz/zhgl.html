@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>租户管理</title>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,employee-scalable=no" name="viewport">
+</head>
+<body class="hold-transition">
+<div id="app">
+    <div class="content-header">
+        <h1>租户管理</h1>
+    </div>
+    <div class="app-container">
+        <div class="box">
+            <!--模糊查询条件            -->
+            <div class="filter-container">
+                <el-input placeholder="用户名" v-model="username" style="width: 200px;"
+                          class="filter-item"></el-input>
+                <el-input placeholder="联系方式" v-model="phone" style="width: 200px;"
+                          class="filter-item"></el-input>
+                <el-button type="primary" @click="getAll()" class="dalfBut">查询</el-button>
+            </div>
+
+            <!-- 表格-->
+            <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
+                <el-table-column type="index" align="center" label="序号"></el-table-column>
+                <el-table-column prop="username" label="用户名" align="center"></el-table-column>
+                <el-table-column prop="realname" label="姓名" align="center"></el-table-column>
+                <el-table-column prop="sex" label="性别" align="center"></el-table-column>
+                <el-table-column prop="sfz" label="身份证" align="center"></el-table-column>
+                <el-table-column prop="phone" label="联系方式" align="center"></el-table-column>
+                <el-table-column prop="email" label="邮箱" align="center"></el-table-column>
+<!--                <el-table-column prop="image" label="头像" width="90" align="center">-->
+<!--                    <template slot-scope="scope">-->
+<!--                        　　　　 <img :src="scope.row.image" width="40" height="40"/>-->
+<!--                    </template>-->
+<!--                </el-table-column>-->
+            </el-table>
+
+        </div>
+    </div>
+    <!--分页工具条-->
+    <div class="block">
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[5, 10, 15, 20]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="totalCount">
+        </el-pagination>
+    </div>
+</div>
+</body>
+<!-- 引入组件库 -->
+<script src="../../../plugins/js/vue.js"></script>
+<link rel="stylesheet" href="../../../plugins/element-ui/index.css">
+<script src="../../../plugins/element-ui/index.js"></script>
+<script src="../../../plugins/js/axios-0.18.0.js"></script>
+<script src="../../js/userlist.js"></script>
+
+</html>

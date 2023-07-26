@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- 页面meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>数据统计</title>
+</head>
+<body>
+<div id="app">
+    <div class="content-header">
+        <h1>费用管理</h1>
+    </div>
+    <div class="app-container">
+        <div class="box">
+            <el-form ref="dataAddForm" :model="formData" label-position="right"
+                     label-width="100px">
+                    <el-col :span="30">
+                        <el-form-item label="地址" prop="house_id">
+                            <template>
+                                <el-select v-model="formData.house_id" placeholder="请选择出租屋地址">
+                                    <el-option
+                                            v-for="address in addresslist"
+                                            :key="address.index"
+                                            :label="address.address"
+                                            :value="address.house_id"
+                                    ></el-option>
+                                </el-select>
+                            </template>
+                        </el-form-item>
+                    </el-col>
+                <input type="button" value="生成统计图" @click="tongji()">
+            </el-form>
+            </div>
+            <!-- 费用统计标签 -->
+            <div>
+                <div id="chart-container" style="width: 600px; height: 400px;"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+<!-- 引入组件库 -->
+<script src="../plugins/js/echarts.min.js"></script>
+<script src="../plugins/js/vue.js"></script>
+<link rel="stylesheet" href="../plugins/element-ui/index.css">
+<script src="../plugins/element-ui/index.js"></script>
+<link rel="stylesheet" href="css/style.css">
+<script src="../plugins/js/axios-0.18.0.js"></script>
+<script src="js/tongji.js"></script>
+
+</html>

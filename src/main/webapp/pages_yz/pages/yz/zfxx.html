@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>租房信息管理</title>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,employee-scalable=no" name="viewport">
+</head>
+<body class="hold-transition">
+<div id="app">
+    <div class="content-header">
+        <h1>租房信息管理</h1>
+    </div>
+    <div class="app-container">
+        <div class="box">
+            <!--模糊查询条件            -->
+            <div class="filter-container">
+                <el-input placeholder="地址" v-model="address" style="width: 200px;"
+                          class="filter-item"></el-input>
+                <el-select placeholder="状态" v-model="status" style="width: 120px;"
+                           class="filter-item">
+                    <el-option :value="0" label="未过期"></el-option>
+                    <el-option :value="1" label="已过期"></el-option>
+                </el-select>
+                <el-button type="primary" @click="getAll()" class="dalfBut">查询</el-button>
+                <el-button type="primary" @click="cz()" class="dalfBut">重置</el-button>
+            </div>
+
+            <!-- 表格-->
+            <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
+                <el-table-column type="index" align="center" label="序号"></el-table-column>
+                <el-table-column prop="address" label="地址" align="center"></el-table-column>
+                <el-table-column prop="zhm" label="租户名" align="center"></el-table-column>
+                <el-table-column prop="status" label="状态" align="center">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.status === 0">未过期</span>
+                        <span v-else-if="scope.row.status === 1">已过期</span>
+                    </template>
+                </el-table-column>
+            </el-table>
+
+        </div>
+    </div>
+    <!--分页工具条-->
+    <div class="block">
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[5, 10, 15, 20]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="totalCount">
+        </el-pagination>
+    </div>
+</div>
+</body>
+<!-- 引入组件库 -->
+<script src="../../../plugins/js/vue.js"></script>
+<link rel="stylesheet" href="../../../plugins/element-ui/index.css">
+<script src="../../../plugins/element-ui/index.js"></script>
+<script src="../../../plugins/js/axios-0.18.0.js"></script>
+<script src="../../js/rentalifm.js"></script>
+
+</html>

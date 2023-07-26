@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.win.xszf.mapper.HouseMapper">
+
+    <resultMap id="houseResultMap" type="house">
+        <result column="user_id" property="userId"></result>
+    </resultMap>
+
+    <!--添加房子-->
+    <insert id="add">
+        insert into house(address, mph, `type`, basemoney, user_id, yajin, `condition`, area, house_no,
+                          toward, `statement`, floor, fwzx, zfzz, zt, title, sort, createTime, house_add)
+        values (#{address}, #{mph}, #{type}, #{basemoney}, #{userId}, #{yajin}, #{condition}, #{area}, #{house_no},
+                #{toward}, #{statement}, #{floor}, #{fwzx}, #{zfzz}, #{zt}, #{title}, #{sort}, #{createTime},
+                #{house_add})
+    </insert>
+
+
+    <!--房子推广分页查询-->
+    <select id="fztgPageQuery" resultType="com.win.xszf.pojo.vo.FZTGVo">
+        select h.*,u.realname from house h,user u
+        where zfzz = 3
+        <if test="house_no != null and house_no != '' ">
+            and house_no = #{house_no}
+        </if>
+        and h.user_id = u.id
+        order by h.createTime desc
+    </select>
+
+    <!--房子审核分页查询-->
+    <select id="FzShSelect" resultType="com.win.xszf.pojo.vo.FZSHVo">
+        select h.*, u.username,u.realname,u.sfz,u.phone,u.email
+        from house h,
+        user u
+        where
+        h.user_id = u.id
+        and h.zfzz != 3
+        <if test="zfzz != null">
+            and zfzz = #{zfzz}
+        </if>
+        <if test="house_no != null and house_no != '' ">
+            and house_no = #{house_no}
+        </if>
+        order by h.createTime desc
+    </select>
+
+    <!--获取房子审核证明材料-->
+    <select id="getfzshVo" resultType="com.win.xszf.pojo.vo.FZSHVo">
+        select h.*, u.username, u.realname, u.sfz, u.phone, u.email, hz.zmcl
+        from house h,
+             user u,
+             house_zmcl hz
+        where h.id = #{id}
+          and h.user_id = u.id
+          and h.id = hz.house_id
+    </select>
+
+
+    <select id="yzPage" resultType="house" resultMap="houseResultMap">
+        select * from house
+        where user_id = #{user_id}
+        <if test="address != null and address != '' ">
+            and address like concat('%',#{address},'%')
+        </if>
+        order by createTime desc
+    </select>
+
+    <!--主页获取数据-->
+    <select id="getHouseList" resultType="com.win.xszf.pojo.entity.House" resultMap="houseResultMap">
+        select *
+        from house
+        where `condition` = 1
+        and zt = 0
+        <if test="type != null">
+            and `type` = #{type}
+        </if>
+        <if test="range != null">
+            and basemoney between #{fromPrice} and #{toPrice}
+        </if>
+        <if test="toward != null and toward != '' ">
+            and toward = #{toward}
+        </if>
+        order by sort limit 10
+    </select>
+
+    <!--根据id获取房子信息-->
+    <select id="getById" resultType="com.win.xszf.pojo.entity.House" resultMap="houseResultMap">
+        select *
+        from house
+        where id = #{id}
+    </select>
+
+    <update id="update">
+        update house
+        <set>
+            <if test="address != null and address != '' ">
+                ,address = #{address}
+            </if>
+            <if test="mph != null and mph != '' ">
+                ,mph = #{mph}
+            </if>
+            <if test="type != null">
+                ,`type` = #{type}
+            </if>
+            <if test="basemoney != null">
+                ,basemoney = #{type}
+            </if>
+            <if test="yajin != null">
+                ,yajin = #{yajin}
+            </if>
+            <if test="condition != null">
+                ,`condition` = #{condition}
+            </if>
+            <if test="area != null">
+                ,area = #{area}
+            </if>
+            <if test="toward != null and toward != '' ">
+                ,toward = #{toward}
+            </if>
+            <if test="statement != null and statement != '' ">
+                ,`statement` = #{statement}
+            </if>
+            <if test="floor != null">
+                ,floor = #{floor}
+            </if>
+            <if test="floor != null">
+                ,floor = #{floor}
+            </if>
+            <if test="fwzx != null">
+                ,fwzx = #{fwzx}
+            </if>
+            <if test="zfzz != null">
+                ,zfzz = #{zfzz}
+            </if>
+            <if test="zt != null">
+                ,zt = #{zt}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <select id="WYZFPage" resultType="com.win.xszf.pojo.vo.WYZFVo">
+        select h.*, u.realname
+        from house h,
+        user u
+        where h.user_id = u.id
+        and h.`condition` = 1
+        and h.zt = 0
+        <if test="address != null and address != '' ">
+            and h.address like concat('%',#{address},'%')
+        </if>
+
+    </select>
+</mapper>

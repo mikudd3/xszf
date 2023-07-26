@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>小松租房</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+<div id="header">
+    <div>
+        <img src="image/img/logo2(已去底).png" style="width: 100px;margin: auto;">
+        <img src="image/img/logo1(已去底).png" style="width: 200px;margin-top: 20px;">
+        <span id="right">
+                <a href="index.html" class="active">首页</a>
+                <input type="text" style="margin-left: 130px;" placeholder="搜索" id="ipu" @click="search()">
+                <a href="login.html">登录</a>
+				<a href="register.html">注册</a>
+                <img :src="image" id="tx" @click="toUser()">
+        </span>
+    </div>
+</div>
+
+<div id="main">
+    <div id="m2">
+        <div id="slider">
+            <div class="slider-wrapper">
+                <img :src="currentSlide.url" alt=""/>
+            </div>
+            <div class="slider-footer">
+                <p>{{ currentSlide.title }}</p>
+                <ul class="slider-indicator">
+                    <li v-for="(slide, index) in slides" :key="index" :class="{ active: index === currentIndex }"></li>
+                </ul>
+                <div class="toggle">
+                    <button class="prev" @click="prevSlide">&lt;</button>
+                    <button class="next" @click="nextSlide">&gt;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="choose">
+        <!-- 租金 begin-->
+        <div class="items">
+            <span class="item-title">租金：</span>
+            <span class="elems-l" id="searchByMoney">
+                <a class="all" rel="nofollow" @click="getPriceRange()">全部</a>
+                <a rel="nofollow" @click="getPriceRange('0-500')">500元以下</a>
+                <a rel="nofollow" @click="getPriceRange('500-1000')">500-1000元</a>
+                <a rel="nofollow" @click="getPriceRange('1000-2000')">1000-2000元</a>
+                <a rel="nofollow" @click="getPriceRange('2000-5000')">2000-5000元</a>
+                <a rel="nofollow" @click="getPriceRange('5000-99999999999')">5000元以上</a>
+            </span>
+        </div>
+
+        <!--  房型 begin-->
+        <div class="items" id="getType">
+            <span class="item-title">房型：</span>
+            <span class="elems-l">
+                <a class="all" rel="nofollow" @click="getTypeList()">全部</a>
+                <a rel="nofollow" @click="getTypeList(`4`)">一室</a>
+                <a rel="nofollow" @click="getTypeList(`3`)">二室</a>
+                <a rel="nofollow" @click="getTypeList(`2`)">三室</a>
+                <a rel="nofollow" @click="getTypeList(`1`)">公寓</a>
+                <a rel="nofollow" @click="getTypeList(`0`)">大别野</a>
+            </span>
+        </div>
+
+        <div class="items" id="getToword">
+            <span class="item-title">朝向：</span>
+            <span class="elems-l">
+                <a class="all" rel="nofollow" @click="getToword()">全部</a>
+                <a rel="nofollow" @click="getToword(`东南`)">东南</a>
+                <a rel="nofollow" @click="getToword(`东北`)">东北</a>
+                <a rel="nofollow" @click="getToword(`南北`)">南北</a>
+                <a rel="nofollow" @click="getToword(`东西`)">东西</a>
+            </span>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="list-content" id="list-content">
+            <div class="zu-tab" id="tabs">
+                <a href="#" class="curTab">全部</a>
+                <a href="#" class="lastTab">
+                    <i class="iconfont"></i>视频看房
+                </a>
+                <a v-for="tab in tabs" :href="tab.link" :class="['lastTab', tab.className]"
+                   :target="tab.target">{{ tab.name }}</a>
+                <a target="_blank" href="#" class="apartmentTab">品牌公寓</a>
+                <a href="#" class="lastTab VRTab">VR看房</a>
+            </div>
+            <!--排序-->
+            <div class="zu-sort">
+                <span class="tit">为您找到<em>桂林</em>附近租房</span>
+                <div class="sort-cond"></div>
+            </div>
+            <!--房源列表豆腐块-->
+            <!--区域板块租房房源列表页-->
+            <div id="houseList" >
+                <div class="zu-itemmod" v-for="item in items" :key="item.infoid" link="#"
+                     fortrack-data="exposure_list" clicklog="click_list" ep-log="{...}" data-visibled="true">
+                    <a class="img" href="#" target="_blank" hidefocus="true">
+                        <img alt="出租房源真实图片" class="thumbnail" :src="item.image" width="180" height="135"
+                             data-loaded="true">
+                        <span class="many-icons iconfont"></span>
+                    </a>
+                    <div class="zu-info" style="width: auto">
+                        <h3>
+                            <a target="_blank" :href="'home.html?id='+item.id"><b class="strongbox">{{ item.address }}</b></a>
+                        </h3>
+
+                        <p class="details-item tag">
+                            <b v-if="item.type === 0">大别野</b>
+                            <b v-else-if="item.type === 1">公寓</b>
+                            <b v-else-if="item.type === 2">3室1厅</b>
+                            <b v-else-if="item.type === 3">2室1厅</b>
+                            <b v-else-if="item.type === 4">1室1厅</b>
+                            <span>|</span>
+                            <b class="strongbox" style="font-weight: normal;">{{ item.area}}</b>
+                            平米<span>|</span>低层(共30层)<span>|</span>{{ item.realname }}
+                        </p>
+                        <address class="details-item">
+                            <a target="_blank"
+                               :href="item.addressLink">{{ item.mph}}</a>&nbsp;&nbsp;{{ item.house_no }}
+                        </address>
+                        <p class="details-item bot-tag" style="width: auto">
+                            <span class="cls-2" style="font-size: 12px">{{ item.house_add }}</span>
+                            <span class="cls-3">{{ item.toward }}</span>
+                        </p>
+                    </div>
+                    <div class="zu-side">
+                        <p><strong><b class="strongbox">{{ item.basemoney }}</b></strong> 元/月</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 右侧广告栏-->
+    <div class="adver-content">
+        <div class="sq-suggest-wrap">
+            <div class="sq-suggest-box">
+                <ul class="list-box">
+                    <li class="hot-house-li">
+                        <!--                         <a href="https://nn.zu.anjuke.com/fangyuan/3106544160433163?isauction=7&amp;shangquan_id=10619&amp;legoFeeUrl=https%3A%2F%2Flegoclick.58.com%2Fjump%3Ftarget%3DpZwY0ZnlsztdraOWUvYKuaYLnhc3PWnQPzdhrHb3sHwhrHcVmhEzmBYYryD1mym3PjT3nhnKnWTzPWcLP1cLTED1nHTvPHEYnHmkPjn1nHm1THTKnHTkTHD_nHTKrjEdTHDvrjb3n1NYrjDQPW0KnE7AEdqEEdqniRPNNb-Zi7wxENGsOlXxOCB4Omv9lp2AOuyAOuzcTHDKnEDKsHDKTHDvrjDzn1mzPjmQPjN1nHE3nH0KP9DKnED1nWRWPjFbPiYQPHTvsHwhnHnVmWKbuBY3nhw6PARBPWc1PWEKnHm3nHc1PWcYP1bOPHTzn1nvn9DQPW9QnWnvnWELrH0YnjELP1EvTEDKTEDKsEDKTE7KEHTvEWIaraYLEWN3sNNLE1bVnNNzwiY3nH7jPH0YEbRKPHNKnWEkuHCYPHTln1EkPWGbmhDdrWRWnhnlPjF-ujCLnjI-rhRWryDKnTDkTEDQsjDQTgVqTHDknj91THDknjnQP1EKm1PbP1K6uAnVuh76uBYYnj9Ysy7brH0VrH-bP1mQuAF6m1DzTEDYTEDKnkD3PjN_rjNksjDkPWDOTHDKUMR_UT76rHc3myubmywWnjnkmH0v&amp;lego_tid=c3d70adc-faaf-4084-ad97-99d761dbac12" onclick="clickLog('zlsq_pc_list_ajk')">-->
+                        <div class="pic-wrap">
+                            <img lazy_src="#" data-loaded="true">
+                        </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="IFX_p3001" class="advBox" style="display:none;"></div>
+    </div>
+</div>
+
+<div id="footer">
+    京公网安备 11010802020110号 © Copyright2023. xiaosongzhufang版权所有 | 京ICP备11024110号
+</div>
+
+<script src="js/vue.js"></script>
+<script src="js/axios-0.18.0.js"></script>
+<script src="js/lbao.js"></script>
+<script src="js/index.js"></script>
+<script>
+    new Vue({
+        el: "#tx",
+        data() {
+            return {
+                image: "image/img/7bf8f68063944804a4d02ea967e7200b.jpg",
+                yhsf: 0,
+            }
+        },
+        mounted() {
+            this.getUser();
+        },
+        methods: {
+            getUser() {
+                axios({
+                    url: "/user/getUser",
+                    method: "get",
+                }).then(resp => {
+                    let user = resp.data.data;
+                    this.image = `/common/download?name=${user.tx}`;
+                    this.yhsf = user.yhsf;
+                    console.log(this.image)
+                })
+            },
+            toUser() {
+                if (this.yhsf == 1) {
+                    location.href = "pages_yz/pages/main.html"
+                } else {
+                    location.href = "pages_user/main.html"
+                }
+
+            }
+        }
+    })
+</script>
+</body>
+
+</html>
